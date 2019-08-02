@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itcast.dao.CheckItemDao">
+    <sql id="origin">
+        select * from t_checkitem
+    </sql>
+    <select id="findAllBlur" parameterType="String" resultType="checkItem">
+        <include refid="origin"></include>
+        <where>
+            <if test="value != null and value.length > 0">
+                code like #{param} or name like #{param}
+            </if>
+        </where>
+    </select>
+</mapper>

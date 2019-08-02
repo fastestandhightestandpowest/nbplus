@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:securot="http://www.springframework.org/schema/security"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--1.配置匿名访问资源-->
+    <security:http security="none" pattern="/js/**"/>
+    <security:http security="none" pattern="/css/**"/>
+    <security:http security="none" pattern="/img/**"/>
+    <security:http security="none" pattern="/plugins/**"/>
+    <security:http security="none" pattern="/login.html"/>
+
+
+    <!--2.配置认证后访问资源-->
+    <security:http auto-config="true" use-expressions="true">
+        <security:headers>
+            <!--设置在页面可以通过iframe访问受保护的页面，默认为不允许访问
+			Spring-Security 默认是设置了 “X-Frame-Options” 属性为DENY
+			有三个：
+				DENY — 表示该页面不允许在 frame 中展示，即便是在相同域名的页面中嵌套也不允许。
+				SAMEORIGIN — 表示该页面可以在相同域名页面的 frame 中展示。
+				ALLOW-FROM https://example.com/ — 表示该页面可以在指定来源的 frame 中展示。
+			-->
+            <security:frame-options policy="SAMEORIGIN"></security:frame-options>
+        </security:headers>
+        <!--设置pages目录下,登录后可以访问-->
+        <securot:intercept-url pattern="/pages/**" access="isAuthenticated()"/>
+        <!--设置登入界面-->
+        <security:form-login login-page="/login.html"
+                             username-parameter="username"
+                             password-parameter="password"
+                             login-processing-url="/login.do"
+                             default-target-url="/pages/main.html"
+                             authentication-failure-url="/login.html"/>
+        <!--设置退出登入-->
+        <security:logout logout-url="/logout.do" logout-success-url="/login.html" invalidate-session="true"/>
+        <!--禁止跨域csrf-->
+        <security:csrf disabled="true"/>
+    </security:http>
+
+    <bean id="bCryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+    <!--3.配置认证管理器-->
+    <security:authentication-manager>
+        <security:authentication-provider user-service-ref="securityUserService">
+            <!--指定使用的密文格式-->
+            <security:password-encoder ref="bCryptPasswordEncoder"></security:password-encoder>
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+    <!--4.开启注解权限-->
+    <security:global-method-security pre-post-annotations="enabled"></security:global-method-security>
+
+</beans>

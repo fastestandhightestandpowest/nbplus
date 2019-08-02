@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itcast.dao.PackageDao">
+    <insert id="addPackage" parameterType="package">
+        <selectKey resultType="int" keyColumn="id" keyProperty="id" order="AFTER">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into t_package (name ,code,helpCode,sex,age,price,remark,attention,img) values
+        (#{name},#{code},#{helpCode},#{sex},#{age},#{price},#{remark},#{attention},#{img})
+    </insert>
+    <select id="findPage" parameterType="String" resultType="package">
+        select id,name,code,helpCode,sex,age,price,remark,attention,img from t_package
+        <where>
+            <if test="value != null and value.length > 0">
+                name like #{queryString} or code like #{queryString} or helpCode like #{queryString}
+            </if>
+        </where>
+    </select>
+
+
+
+    <resultMap id="mypackage" type="package">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <result property="sex" column="sex"></result>
+        <result property="age" column="age"></result>
+        <result property="remark" column="remark"></result>
+        <result property="img" column="img"></result>
+        <!--一对多-->
+        <collection property="checkGroups" ofType="checkGroup" column="id">
+            <id property="id" column="check_groupId"></id>
+            <result property="name" column="check_groupName"></result>
+            <result property="remark" column="check_groupRemark"></result>
+            <!--一对多-->
+            <collection property="checkItems" ofType="checkItem" column="id">
+                <id property="id" column="check_itemId"></id>
+                <result property="name" column="check_itemName"></result>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="findPackag_GroupAndItem_byId" parameterType="int" resultMap="mypackage">
+        select
+            p.*,g.id as check_groupId,g.name as check_groupName,g.remark as check_groupRemark,i.id as check_itemId,i.name as check_itemName
+        from
+            t_package p,t_package_checkgroup pg,t_checkgroup g,t_checkgroup_checkitem gi,t_checkitem i
+        where
+            p.id = pg.package_id and pg.checkgroup_id = g.id and g.id = gi.checkgroup_id and gi.checkitem_id =i.id
+            and p.id = #{id}
+    </select>
+</mapper>

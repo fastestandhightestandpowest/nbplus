@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itcast.dao.UserDao">
+    <select id="findUserByUserName" parameterType="String" resultMap="myUserMap">
+        select
+            u.*,
+            r.id as r_id,r.name as r_name,r.description as r_description,r.keyword as r_keyword,
+            p.id as p_id,p.name as p_name,p.description as p_description,p.keyword as p_keyword
+        from
+             t_user u,t_role r,t_permission p,t_user_role ur,t_role_permission rp
+        where
+            u.id = ur.user_id and r.id = ur.role_id
+          and
+            r.id = rp.role_id and rp.permission_id = p.id
+          and
+            u.username = #{username}
+    </select>
+    <resultMap id="myUserMap" type="user">
+        <id column="id" property="id"/>
+        <result column="birthday" property="birthday"/>
+        <result column="gender" property="gender"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="remark" property="remark"/>
+        <result column="station" property="station"/>
+        <result column="telephone" property="telephone"/>
+        <collection property="roles" column="id" ofType="Role">
+            <id column="r_id" property="id"/>
+            <result column="r_name" property="name"/>
+            <result column="r_keyword" property="keyword"/>
+            <result column="r_description" property="description"/>
+            <collection property="permissions" column="id" ofType="Permission">
+                <id column="p_id" property="id"/>
+                <result column="p_name" property="name"/>
+                <result column="p_keyword" property="keyword"/>
+                <result column="p_description" property="description"/>
+            </collection>
+        </collection>
+    </resultMap>
+</mapper>

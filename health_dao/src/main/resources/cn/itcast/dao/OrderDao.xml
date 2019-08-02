@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itcast.dao.OrderDao">
+    <select id="getOrderSuccessInfoById" parameterType="int" resultType="map">
+        select
+            m.name as member,p.name as setmeal,o.orderDate as orderDate,o.orderType as orderType
+        from
+            t_member m,t_package p,t_order o
+        where
+            o.package_id = p.id and o.member_id = m.id and o.id = #{id}
+    </select>
+
+    <insert id="add" parameterType="Order">
+        <selectKey keyColumn="id" keyProperty="id" resultType="int" order="AFTER">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into t_order values (null,#{memberId},#{orderDate},#{orderType},#{orderStatus},#{packageId})
+    </insert>
+</mapper>
