@@ -9,9 +9,8 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,22 +37,37 @@ public class ReportController {
     private ReportService reportService;
 
     /**
-     * 前12个月的会员数量报表
-     *
+     *指定日期之间的会员数量
      * @return
      */
-    @GetMapping("/getMemberReport")
-    public Map<String, Object> getMemberReport() {
-        Calendar calendar = Calendar.getInstance();
+    @PostMapping("/getMemberReport")
+    public Map<String, Object> getMemberReport(@RequestBody Map<String,Object> dateMap) {
+        /*Calendar calendar = Calendar.getInstance();
         //计算当前日期的前12个月
-        calendar.add(Calendar.MONTH, -12);
+        calendar.add(Calendar.MONTH, -12);*/
         ArrayList<String> months = new ArrayList<>();
         ArrayList<Integer> memberCount = new ArrayList<>();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM");
-        for (int i = 0; i < 12; i++) {
+        /*for (int i = 0; i < 12; i++) {
             calendar.add(Calendar.MONTH, 1);
             String month = format.format(calendar.getTime());
             months.add(month);
+        }*/
+        String startTime = (String) dateMap.get("startTime");
+        String endTime = (String) dateMap.get("endTime");
+        String[] starts = startTime.split("-");
+        String[] ends = endTime.split("-");
+        //开始时间
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.set(Integer.parseInt(starts[0]),Integer.parseInt(starts[1])-1 ,Integer.parseInt(starts[2]));
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.set(Integer.parseInt(ends[0]), Integer.parseInt(ends[1]), Integer.parseInt(ends[2]));
+        while (true){
+            if (startCalendar.compareTo(endCalendar)>0){
+                break;
+            }
+            months.add(format.format(startCalendar.getTime()));
+            startCalendar.add(Calendar.MONTH, 1);
         }
         memberCount = memberService.getMemberCountBeforeRegDate(months);
         Map<String, Object> map = new HashMap<>();
