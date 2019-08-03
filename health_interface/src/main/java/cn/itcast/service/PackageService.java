@@ -19,9 +19,9 @@ public interface PackageService {
 
     PageResult findPage(QueryPageBean queryPageBean);
 
-    List<Package> findAll();
+    String findAll();
 
-    Package findById(int id);
+    String findById(int id);
 
     Package getPackage_orderInfo(int id);
 

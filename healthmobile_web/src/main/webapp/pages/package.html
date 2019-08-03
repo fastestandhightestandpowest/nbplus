@@ -52,15 +52,18 @@
         },
         mounted (){
             axios.post("/package/getPackage.do").then((response)=>{
+                _this=this;
                 if(response.data.flag){
-                    this.packageList = response.data.data;
-                }else{
-                    this.$message({
-                        message:response.data.message,
-                        type:"error"
-                    })
-                }
-            });
+                    //获取从后台传入的JSON对象
+                    var jsonObj=JSON.parse(response.data.data);
+                    _this.packageList = jsonObj;
+            }else{
+                this.$message({
+                    message:response.data.message,
+                    type:"error"
+                })
+            }
+        });
         }
     });
 </script>

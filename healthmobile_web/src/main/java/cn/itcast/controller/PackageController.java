@@ -34,14 +34,14 @@ public class PackageController {
     public Result getPackage(){
         try {
             //在service已经把图片链接地址封装好了
-            List<Package> list = packageService.findAll();
+            String jsonData = packageService.findAll();
             /*for (Package aPackage : list) {
                 aPackage.setImg(QiniuUtils.URL +"/"+aPackage.getImg());
             }*/
-            list.forEach(pack -> {
-                pack.setImg(QiniuUtils.URL +"/"+pack.getImg());
-            });
-            return new Result(true,MessageConstant.GET_SETMEAL_LIST_SUCCESS,list);
+//            list.forEach(pack -> {
+//                pack.setImg(QiniuUtils.URL +"/"+pack.getImg());
+//            });
+            return new Result(true,MessageConstant.GET_SETMEAL_LIST_SUCCESS,jsonData);
         } catch (Exception e) {
             return new Result(false,MessageConstant.GET_SETMEAL_LIST_FAIL);
         }
@@ -53,9 +53,9 @@ public class PackageController {
     @GetMapping("/getPackageDetail")
     public Result findById(int id){
         try {
-            Package pack = packageService.findById(id);
-            pack.setImg(QiniuUtils.URL +"/"+pack.getImg());
-            return new Result(true, MessageConstant.QUERY_SETMEAL_SUCCESS,pack);
+            String jsonData= packageService.findById(id);
+//            pack.setImg(QiniuUtils.URL +"/"+pack.getImg());
+            return new Result(true, MessageConstant.QUERY_SETMEAL_SUCCESS,jsonData);
         } catch (Exception e) {
             return new Result(false, MessageConstant.QUERY_SETMEAL_FAIL);
         }

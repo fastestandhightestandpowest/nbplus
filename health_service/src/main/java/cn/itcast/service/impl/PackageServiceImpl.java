@@ -7,8 +7,10 @@ import cn.itcast.entity.QueryPageBean;
 import cn.itcast.pojo.CheckGroup;
 import cn.itcast.pojo.Package;
 import cn.itcast.service.PackageService;
+import cn.itcast.utils.QiniuUtils;
 import cn.itcast.utils.StringUtils;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,9 +79,22 @@ public class PackageServiceImpl implements PackageService {
      * @return
      */
     @Override
-    public List<Package> findAll() {
-        List<Package> packages = packageDao.findAll();
-        return packages;
+    public String findAll() {
+        //从jedis中获取套餐json
+        String jsonData = jedisPool.getResource().get("packages");
+//        如果redis中没有,则去数据库中查看
+        if (jsonData==null || "".equals(jsonData.trim())){
+            List<Package> packages = packageDao.findAll();
+//            设置图片的路径格式
+            packages.forEach(pack -> {
+                pack.setImg(QiniuUtils.URL +"/"+pack.getImg());
+            });
+//            将集合装换成json格式数据
+           jsonData=JSON.toJSONString(packages);
+//           将查询出来的数据存入至redis中
+           jedisPool.getResource().set("packages", jsonData);
+        }
+        return jsonData;
     }
 
     /**
@@ -87,9 +102,22 @@ public class PackageServiceImpl implements PackageService {
      * @return
      */
     @Override
-    public Package findById(int id) {
-        Package pack = packageDao.findPackag_GroupAndItem_byId(id);
-        return pack;
+    public String findById(int id) {
+        //从jedis中获取套餐json
+        String jsonData = jedisPool.getResource().get("pack");
+//        如果redis中没有,则去数据库中查看
+        if (jsonData==null || "".equals(jsonData.trim())){
+            Package pack = packageDao.findPackag_GroupAndItem_byId(id);
+//            设置图片的路径格式
+            pack.setImg(QiniuUtils.URL +"/"+pack.getImg());
+//            将集合装换成json格式数据
+            jsonData=JSON.toJSONString(pack);
+//           将查询出来的数据存入至redis中
+            jedisPool.getResource().set("pack", jsonData);
+        }
+        return jsonData;
+
+
     }
 
     /**
