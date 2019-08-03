@@ -1,10 +1,7 @@
 package cn.itcast.dao;
 
 import cn.itcast.pojo.OrderSetting;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.Date;
 import java.util.List;
@@ -75,4 +72,11 @@ public interface OrderSettingDao {
      */
     @Update("update t_ordersetting set reservations = reservations+1 where orderDate = #{orderDate}")
     void updateReservationsByOrderDate(String orderDate);
+
+    /**
+     * 根据日期时间清理过期的预约人数设置
+     * @param firstDay4ThisMonth
+     */
+    @Delete("delete from t_ordersetting where orderDate<#{firstDay4ThisMonth}")
+    void clear(Date firstDay4ThisMonth);
 }

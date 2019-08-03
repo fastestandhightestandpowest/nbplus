@@ -94,4 +94,10 @@ public class OrderSettingServiceImpl implements OrderSettingService {
             orderSettingDao.add(orderSetting);
         }
     }
+// 定期清理OrderSetting数据
+    @Override
+    @Transactional
+    public void clear(java.util.Date firstDay4ThisMonth) {
+        orderSettingDao.clear(firstDay4ThisMonth);
+    }
 }

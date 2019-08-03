@@ -93,9 +93,12 @@
         },
         mounted(){
             axios.get("/package/getPackageDetail.do?id=" + id).then((response) => {
+                _this=this;
                 if(response.data.flag){
-                    this.package = response.data.data;
-                    this.imgUrl = this.package.img;
+                    //获取从后台传入的JSON对象
+                    var jsonObj=JSON.parse(response.data.data);
+                    _this.package = jsonObj;
+                    _this.imgUrl = this.package.img;
                 }
             });
         }

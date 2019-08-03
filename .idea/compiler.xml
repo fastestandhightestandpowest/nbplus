@@ -17,6 +17,5 @@
         <module name="security_demo" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="8" />
   </component>
 </project>

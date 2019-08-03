@@ -3,6 +3,7 @@ package cn.itcast.service;
 import cn.itcast.pojo.OrderSetting;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,4 +17,6 @@ public interface OrderSettingService {
     List<Map> getOrderInfo(Map<String, String> map);
 
     void editNumberByOrderDate(OrderSetting orderSetting);
+
+    void clear(Date firstDay4ThisMonth);
 }
