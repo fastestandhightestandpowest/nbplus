@@ -8,4 +8,13 @@
         </selectKey>
         insert into t_member values (null,#{fileNumber},#{name},#{sex},#{idCard},#{phoneNumber},#{regTime},#{password},#{email},#{birthday},#{remark})
     </insert>
+
+
+    <select id="findSexCount" resultType="Map">
+       SELECT t.sex name,COUNT(t.id) AS value FROM t_member t GROUP BY sex
+    </select>
+
+    <select id="getAgea" resultType="Member">
+         SELECT * FROM t_member
+    </select>
 </mapper>

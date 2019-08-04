@@ -1,6 +1,8 @@
 package cn.itcast.service;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author hua
@@ -8,4 +10,8 @@ import java.util.ArrayList;
  **/
 public interface MemberService {
     ArrayList<Integer> getMemberCountBeforeRegDate(ArrayList<String> months);
+
+    List<Map<String,Object>> findSexCount();
+
+    List<Map> getAges();
 }

@@ -8,9 +8,6 @@
     <file type="web" url="file://$PROJECT_DIR$/healthmobile_web" />
     <file type="web" url="file://$PROJECT_DIR$/security_demo" />
   </component>
-  <component name="JavaScriptSettings">
-    <option name="languageLevel" value="ES6" />
-  </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
