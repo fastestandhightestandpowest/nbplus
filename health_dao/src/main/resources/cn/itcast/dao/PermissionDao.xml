@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itcast.dao.PermissionDao">
+    <select id="findAll" parameterType="string" resultType="Permission">
+        select * from `t_permission`
+        <where>
+            <if test="value != null and value.length > 0 and value != 'null'">
+                name like #{value} or keyword like #{value}
+            </if>
+        </where>
+    </select>
+    <select id="findRoles" resultType="role">
+        select * from `t_role`
+    </select>
+    <insert id="addOnePermission" parameterType="Permission">
+    <selectKey keyProperty="id" order="AFTER" resultType="integer" keyColumn="id">
+            select last_insert_id()
+    </selectKey>
+        insert into t_permission (name,keyword,description) values (#{name},#{keyword},#{description})
+    </insert>
+    <insert id="addMiddle" parameterType="integer">
+        insert into `t_role_permission` (role_id,permission_id) values (#{rid},#{pid})
+    </insert>
+    <select id="findOnePermissionById" parameterType="Integer" resultType="Permission">
+        select * from `t_permission` where id=#{value}
+    </select>
+    <select id="echoIds" parameterType="integer" resultType="integer">
+        select role_id from `t_role_permission` where permission_id=#{value}
+    </select>
+    <update id="editPermission" parameterType="Permission">
+      update `t_permission` set name=#{name},keyword=#{keyword},description=#{description} where id=#{id}
+    </update>
+    <delete id="deleteMiddle" parameterType="Integer">
+        delete from `t_role_permission` where permission_id=#{value}
+    </delete>
+    <select id="findMiddlePr" parameterType="int" resultType="int">
+        select count(1) from t_role_permission where permission_id=#{value}
+    </select>
+    <delete id="deleteGroup" parameterType="int">
+        delete from t_permission where id=#{value}
+    </delete>
+</mapper>
