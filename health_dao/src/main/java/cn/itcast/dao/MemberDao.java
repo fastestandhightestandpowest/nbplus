@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author hua
@@ -40,4 +42,9 @@ public interface MemberDao {
      */
     @Select("select count(1) from t_member where regTime BETWEEN #{startDate} and #{endDate}")
     Integer findBetweenRegDateNums(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+
+    List<Map<String,Object>> findSexCount();
+
+    List<Member> getAgea();
 }

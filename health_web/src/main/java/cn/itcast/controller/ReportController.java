@@ -184,4 +184,31 @@ public class ReportController {
             e.printStackTrace();
         }
     }
+
+    @RequestMapping("/getSex")
+    public Result getSex(){
+
+        List<Map<String,Object>> list = memberService.findSexCount();
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("list",list);
+
+        List<String> memberSex = new ArrayList<>();
+        for (Map<String, Object> m : list) {
+            String name = (String) m.get("name");
+            m.put("name", Integer.parseInt(name)==1?"男":"女");
+            memberSex.add((String) m.get("name"));
+        }
+        map.put("memberSex",memberSex);
+        return new Result(true, MessageConstant.GET_MEMBER_NUMBER_REPORT_SUCCESS,map);
+    }
+
+    //年龄段比例
+    @RequestMapping("/getAges")
+    public Result getAges() {
+        //调用业务层，获取会员的年龄数据
+        List<Map> setMemberCount = memberService.getAges();
+        //获取成功
+        return new Result(true, MessageConstant.GET_MEMBER_NUMBER_REPORT_SUCCESS, setMemberCount);
+    }
 }
