@@ -83,7 +83,7 @@
     <script src="../plugins/elementui/index.js"></script>
     <script src="../js/axios-0.18.0.js"></script>
     <script src="../js/jquery.min.js"></script>
-    <script src="../plugins/echarts/echarts.js"></script>
+    <script src="plugins/echarts/echarts.js"></script>
 </head>
 <body class="hold-transition">
 <div id="app">
@@ -188,7 +188,7 @@
                                 data:['会员数量']
                             },
                             xAxis: {
-                                data: res.data.months
+                                data: res.data.data.months
                             },
                             yAxis: {
                                 type:'value'
@@ -196,7 +196,7 @@
                             series: [{
                                 name: '会员数量',
                                 type: 'line',
-                                data: res.data.memberCount
+                                data: res.data.data.memberCount
                             }]
                         });
                 });
@@ -220,4 +220,11 @@
     /*页面加载完成时展示表*/
     $("#charts3").click();
 </script>
+
+
+
+
+
+
+
 </html>

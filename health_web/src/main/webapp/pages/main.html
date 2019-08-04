@@ -83,7 +83,7 @@
     var vue = new Vue({
         el: '#app',
         data:{
-            admin:"admin",
+            admin:null,
             menuList:[
                 {
                     "path": "1",
@@ -204,6 +204,19 @@
         axios.get("/user/getUsername.do").then(response => {
             if (response.data.flag) {
                 vue.admin = response.data.data
+
+                if (vue.admin != null){
+                    axios.get("/main/getMenu.do?username="+vue.admin).then(response => {
+                        if (response.data.flag) {
+                            vue.menuList = response.data.data
+                        }else{
+                            vue.$message({
+                                message:response.data.message,
+                                type:"error"
+                            })
+                        }
+                    })
+                }
             }else{
                 vue.$message({
                     message:response.data.message,
@@ -212,5 +225,17 @@
             }
         })
     }
+    /*function getMenu() {
+        axios.get("/main/getMenu.do?username="+this.admin).then(response => {
+            if (response.data.flag) {
+                vue.menuList = response.data.data
+            }else{
+                vue.$message({
+                    message:response.data.message,
+                    type:"error"
+                })
+            }
+        })
+    }*/
 </script>
 </html>

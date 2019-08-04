@@ -15,4 +15,10 @@ public class DateTest {
         String s = DateUtils.parseDate2String(firstDay4ThisMonth);
         System.out.println(s);
     }
+    @Test
+    public void dateTest() throws Exception {
+        Date firstDayOfWeek = DateUtils.getThisWeekMonday(new Date());
+        String s = DateUtils.parseDate2String(firstDayOfWeek);
+        System.out.println(s);
+    }
 }
