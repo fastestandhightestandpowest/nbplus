@@ -49,6 +49,6 @@ public class SecurityUserService implements UserDetailsService {
             //角色授权
             arrayList.add(new SimpleGrantedAuthority(role.getKeyword()));
         }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(),encoder.encode("admin"),arrayList);
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),user.getPassword(),arrayList);
     }
 }
