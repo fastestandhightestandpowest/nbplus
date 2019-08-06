@@ -10,6 +10,7 @@ import cn.itcast.utils.StringUtils;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,8 +53,11 @@ public class CheckGroupServiceImpl implements CheckGroupService {
             queryPageBean.setQueryString("%"+queryPageBean.getQueryString()+"%");
         }
         PageHelper.startPage(queryPageBean.getCurrentPage(), queryPageBean.getPageSize());
-        Page<CheckGroup> page = checkGroupDao.findAllCheckGroup(queryPageBean.getQueryString());
-        return new PageResult(page.getTotal(),page.getResult());
+        List<CheckGroup> list=checkGroupDao.findAllCheckGroup(queryPageBean.getQueryString());
+        PageInfo pageInfo=new PageInfo(list);
+        //Page<CheckGroup> page = checkGroupDao.findAllCheckGroup(queryPageBean.getQueryString());
+        //return new PageResult(page.getTotal(),page.getResult());
+        return new PageResult(pageInfo.getTotal(),list);
     }
 
     @Override
